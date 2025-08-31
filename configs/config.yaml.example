@@ -1,0 +1,20 @@
+server:
+  port: "8080"
+  host: "localhost"
+  mode: "debug"
+  timeout: "30s"
+
+database:
+  host: "localhost"
+  port: "5432"
+  user: "postgres"
+  password: "postgres"
+  name: "bahrululum"
+  ssl_mode: "disable"
+  max_open_conns: 25
+  max_idle_conns: 5
+
+jwt:
+  secret: "your-secret-key-change-in-production"
+  expiry: "15m"
+  refresh_expiry: "7d"

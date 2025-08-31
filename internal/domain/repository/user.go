@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/bobchopperz/bahrululum/internal/domain/models"
 	"github.com/google/uuid"
@@ -26,25 +27,46 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 }
 
 func (r *userRepository) Create(ctx context.Context, user *models.User) error {
+	if err := r.db.WithContext(ctx).Create(user).Error; err != nil {
+		return err
+	}
 	return nil
 }
 
 func (r *userRepository) Update(ctx context.Context, user *models.User) error {
+	if err := r.db.WithContext(ctx).Save(user).Error; err != nil {
+		return err
+	}
 	return nil
 }
 
 func (r *userRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	if err := r.db.WithContext(ctx).Delete(&models.User{}, "id = ?", id).Error; err != nil {
+		return err
+	}
 	return nil
 }
 
 func (r *userRepository) List(ctx context.Context, offset, limit int) ([]*models.User, error) {
-	return nil, nil
+	var users []*models.User
+	err := r.db.WithContext(ctx).Offset(offset).Limit(limit).Find(&users).Error
+	return users, err
 }
 
 func (r *userRepository) GetByID(ctx context.Context, id uuid.UUID) (*models.User, error) {
-	return nil, nil
+	var user models.User
+	err := r.db.WithContext(ctx).First(&user, "id = ?", id).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+	return &user, err
 }
 
 func (r *userRepository) GetByEmail(ctx context.Context, email string) (*models.User, error) {
-	return nil, nil
+	var user models.User
+	err := r.db.WithContext(ctx).First(&user, "email = ?", email).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+	return &user, err
 }

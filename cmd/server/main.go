@@ -9,8 +9,11 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/bobchopperz/bahrululum/internal/api"
 	"github.com/bobchopperz/bahrululum/internal/config"
-	"github.com/bobchopperz/bahrululum/internal/initializer/database"
+	"github.com/bobchopperz/bahrululum/internal/domain/repository"
+	"github.com/bobchopperz/bahrululum/internal/domain/service"
+	"github.com/bobchopperz/bahrululum/internal/init/database"
 	"github.com/labstack/echo/v4"
 )
 
@@ -24,13 +27,17 @@ func main() {
 
 	db, err := database.InitDatabase(&cfg.DatabaseConfig)
 	if err != nil {
-		fmt.Println("Failed to setup database")
+		log.Fatal("Failed to setup database")
 	}
-
-	fmt.Println(db.Config)
 
 	e := echo.New()
 	e.HideBanner = true
+
+	userRepository := repository.NewUserRepository(db)
+	userService := service.NewUserService(userRepository)
+
+	api.SetupRoutes(e, userService)
+
 	go func() {
 		addr := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
 		fmt.Println("Starting server", addr)

@@ -8,9 +8,10 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID      `json:"id" gorm:"type:uuid;primary_key;default;gen_random_uuid()"`
+	ID        uuid.UUID      `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
 	Name      string         `json:"name" gorm:"not null; size:255" validate:"required,min=2,max=100"`
 	Email     string         `json:"email" gorm:"uniqueIndex;not null;size:255" validate:"required,email"`
+	NIP       string         `json:"nil" gorm:"not null; size:255" validate:"required,min=2,max=100"`
 	Password  string         `json:"-" gorm:"not null;size:255"`
 	IsActive  bool           `json:"is_active" gorm:"default:true"`
 	CreatedAt time.Time      `json:"created_at"`
