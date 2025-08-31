@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/brajes/go-rest-api/internal/config"
+	"github.com/bobchopperz/bahrululum/internal/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

@@ -9,8 +9,8 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/brajes/go-rest-api/internal/config"
-	"github.com/brajes/go-rest-api/internal/initializer/database"
+	"github.com/bobchopperz/bahrululum/internal/config"
+	"github.com/bobchopperz/bahrululum/internal/initializer/database"
 	"github.com/labstack/echo/v4"
 )
 

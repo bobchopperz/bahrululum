@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/brajes/go-rest-api/internal/domain/models"
+	"github.com/bobchopperz/bahrululum/internal/domain/models"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
