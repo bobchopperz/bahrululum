@@ -5,7 +5,7 @@ import (
 
 	"github.com/bobchopperz/bahrululum/internal/config"
 	"github.com/bobchopperz/bahrululum/internal/domain/models"
-	"github.com/bobchopperz/bahrululum/internal/initializer/database"
+	"github.com/bobchopperz/bahrululum/internal/init/database"
 )
 
 func main() {

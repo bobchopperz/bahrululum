@@ -13,6 +13,7 @@ type UserRepository interface {
 	Create(ctx context.Context, user *models.User) error
 	GetByID(ctx context.Context, id uuid.UUID) (*models.User, error)
 	GetByEmail(ctx context.Context, email string) (*models.User, error)
+	GetByNip(ctx context.Context, nip string) (*models.User, error)
 	Update(ctx context.Context, user *models.User) error
 	Delete(ctx context.Context, id uuid.UUID) error
 	List(ctx context.Context, offset, limit int) ([]*models.User, error)
@@ -65,6 +66,15 @@ func (r *userRepository) GetByID(ctx context.Context, id uuid.UUID) (*models.Use
 func (r *userRepository) GetByEmail(ctx context.Context, email string) (*models.User, error) {
 	var user models.User
 	err := r.db.WithContext(ctx).First(&user, "email = ?", email).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+	return &user, err
+}
+
+func (r *userRepository) GetByNip(ctx context.Context, nip string) (*models.User, error) {
+	var user models.User
+	err := r.db.WithContext(ctx).First(&user, "nip = ?", nip).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
