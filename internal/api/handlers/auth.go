@@ -28,9 +28,9 @@ func (h *AuthHandler) Register(c echo.Context) error {
 		return err
 	}
 
-	if err := c.Validate(&req); err != nil {
-		return err
-	}
+	// if err := c.Validate(&req); err != nil {
+	// 	return err
+	// }
 
 	user, err := h.userService.CreateUser(c.Request().Context(), &req)
 	if err != nil {
@@ -47,9 +47,9 @@ func (h *AuthHandler) Login(c echo.Context) error {
 		return util.ErrorResponse(c, http.StatusBadRequest, "Invalid request body")
 	}
 
-	if err := c.Validate(&req); err != nil {
-		return util.ErrorResponse(c, http.StatusBadRequest, "Invalid request body")
-	}
+	// if err := c.Validate(&req); err != nil {
+	// 	return util.ErrorResponse(c, http.StatusBadRequest, "Invalid request body")
+	// }
 
 	tokens, err := h.authService.Login(c.Request().Context(), &req)
 	if err != nil {

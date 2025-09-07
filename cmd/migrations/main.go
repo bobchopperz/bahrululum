@@ -24,6 +24,10 @@ func main() {
 	}
 
 	userModel := models.User{}
+	courseModel := models.Course{}
+	refreshTokenModel := models.RefreshToken{}
 
-	db.AutoMigrate(&userModel)
+	db.Migrator().DropTable(&userModel, &courseModel, &refreshTokenModel)
+
+	db.AutoMigrate(&userModel, &courseModel, &refreshTokenModel)
 }

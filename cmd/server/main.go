@@ -35,8 +35,11 @@ func main() {
 	configureMiddleware(e)
 
 	userRepository := repository.NewUserRepository(db)
+	courseRepository := repository.NewCourseRepository(db)
+
 	userService := service.NewUserService(userRepository)
 	authService := service.NewAuthService(userRepository, &cfg.JWTConfig)
+	courseService := service.NewCourseService(courseRepository)
 
 	routes.SetupHealthRoutes(e)
 
@@ -45,8 +48,8 @@ func main() {
 		UserService: userService,
 	}
 	routes.SetupAuthRoutes(e, opts)
-
 	routes.SetupUsersRoutes(e, userService)
+	routes.SetupCoursesRoutes(e, courseService)
 
 	startServer(e, cfg)
 }

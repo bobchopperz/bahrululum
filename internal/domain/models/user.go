@@ -21,6 +21,7 @@ type User struct {
 
 type CreateUserRequest struct {
 	Name     string `json:"name" validate:"required,min=1,max=100"`
+	Nip      string `json:"nip" validate:"required,min=12"`
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`
 }
