@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/bobchopperz/bahrululum/internal/api/validators"
+	"github.com/bobchopperz/bahrululum/internal/domain/models"
 	"github.com/bobchopperz/bahrululum/internal/domain/service"
 	"github.com/bobchopperz/bahrululum/internal/util"
 	"github.com/google/uuid"
@@ -59,4 +61,23 @@ func (h *CourseHandler) GetCourse(c echo.Context) error {
 	}
 
 	return util.SuccessResponse(c, http.StatusOK, "Course retrieved successfully", course)
+}
+
+func (h *CourseHandler) CreateCourse(c echo.Context) error {
+	var req models.CreateCourseRequest
+
+	if err := c.Bind(&req); err != nil {
+		return util.ErrorResponse(c, http.StatusInternalServerError, "Invalid request")
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return validators.ValidationErrorResponse(c, err)
+	}
+
+	course, err := h.courseService.CreateCourse(c.Request().Context(), &req)
+	if err != nil {
+		return util.ErrorResponse(c, http.StatusUnprocessableEntity, "Something went wrong")
+	}
+
+	return util.SuccessResponse(c, http.StatusCreated, "Course retrieved successfully", course)
 }

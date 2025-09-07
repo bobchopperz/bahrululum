@@ -12,4 +12,5 @@ func SetupCoursesRoutes(e *echo.Echo, courseService service.CourseService) {
 	courses := e.Group("/courses")
 	courses.GET("", courseHandler.GetCourses)
 	courses.GET("/:id", courseHandler.GetCourse)
+	courses.POST("", courseHandler.CreateCourse)
 }

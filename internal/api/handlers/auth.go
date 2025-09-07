@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/bobchopperz/bahrululum/internal/api/validators"
 	"github.com/bobchopperz/bahrululum/internal/domain/models"
 	"github.com/bobchopperz/bahrululum/internal/domain/service"
 	"github.com/bobchopperz/bahrululum/internal/util"
@@ -25,12 +26,12 @@ func (h *AuthHandler) Register(c echo.Context) error {
 	var req models.CreateUserRequest
 
 	if err := c.Bind(&req); err != nil {
-		return err
+		return util.ErrorResponse(c, http.StatusBadRequest, "Invalid request body")
 	}
 
-	// if err := c.Validate(&req); err != nil {
-	// 	return err
-	// }
+	if err := c.Validate(&req); err != nil {
+		return validators.ValidationErrorResponse(c, err)
+	}
 
 	user, err := h.userService.CreateUser(c.Request().Context(), &req)
 	if err != nil {
@@ -47,9 +48,9 @@ func (h *AuthHandler) Login(c echo.Context) error {
 		return util.ErrorResponse(c, http.StatusBadRequest, "Invalid request body")
 	}
 
-	// if err := c.Validate(&req); err != nil {
-	// 	return util.ErrorResponse(c, http.StatusBadRequest, "Invalid request body")
-	// }
+	if err := c.Validate(&req); err != nil {
+		return validators.ValidationErrorResponse(c, err)
+	}
 
 	tokens, err := h.authService.Login(c.Request().Context(), &req)
 	if err != nil {

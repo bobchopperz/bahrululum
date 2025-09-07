@@ -11,6 +11,7 @@ import (
 
 	mymiddleware "github.com/bobchopperz/bahrululum/internal/api/middleware"
 	"github.com/bobchopperz/bahrululum/internal/api/routes"
+	"github.com/bobchopperz/bahrululum/internal/api/validators"
 	"github.com/bobchopperz/bahrululum/internal/config"
 	"github.com/bobchopperz/bahrululum/internal/domain/repository"
 	"github.com/bobchopperz/bahrululum/internal/domain/service"
@@ -31,6 +32,7 @@ func main() {
 	}
 
 	e := echo.New()
+	e.Validator = validators.NewValidator()
 	e.HideBanner = true
 	configureMiddleware(e)
 

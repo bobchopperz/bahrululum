@@ -18,7 +18,7 @@ type Course struct {
 
 type CreateCourseRequest struct {
 	Name        string `json:"name" validate:"required,min=1,max=100"`
-	Description string `json:"description" validate:"required,email"`
+	Description string `json:"description" validate:"required"`
 }
 
 type CourseResponse struct {
