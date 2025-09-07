@@ -10,6 +10,7 @@ type Config struct {
 	Server         ServerConfig   `mapstructure:"server"`
 	DatabaseConfig DatabaseConfig `mapstructure:"database"`
 	LoggerConfig   LoggerConfig   `mapstructure:"logger"`
+	JWTConfig      JWTConfig      `mapstructure:"jwt"`
 }
 
 func LoadConfig() (*Config, error) {
@@ -47,7 +48,7 @@ func setDefaults() {
 	viper.SetDefault("database.max_open_conns", 25)
 	viper.SetDefault("database.max_idle_conns", 5)
 	viper.SetDefault("jwt.expiry", "15m")
-	viper.SetDefault("jwt.refresh_expiry", "7d")
+	viper.SetDefault("jwt.refresh_expiry", "168h")
 	viper.SetDefault("logger.level", "info")
 	viper.SetDefault("logger.format", "text")
 }

@@ -17,4 +17,4 @@ database:
 jwt:
   secret: "your-secret-key-change-in-production"
   expiry: "15m"
-  refresh_expiry: "7d"
+  refresh_expiry: "168h"

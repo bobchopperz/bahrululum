@@ -9,17 +9,17 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/bobchopperz/bahrululum/internal/api"
+	mymiddleware "github.com/bobchopperz/bahrululum/internal/api/middleware"
+	"github.com/bobchopperz/bahrululum/internal/api/routes"
 	"github.com/bobchopperz/bahrululum/internal/config"
 	"github.com/bobchopperz/bahrululum/internal/domain/repository"
 	"github.com/bobchopperz/bahrululum/internal/domain/service"
 	"github.com/bobchopperz/bahrululum/internal/init/database"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
-	log.Println("Starting server")
-
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
@@ -32,11 +32,34 @@ func main() {
 
 	e := echo.New()
 	e.HideBanner = true
+	configureMiddleware(e)
 
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository)
+	authService := service.NewAuthService(userRepository, &cfg.JWTConfig)
 
-	api.SetupRoutes(e, userService)
+	routes.SetupHealthRoutes(e)
+
+	opts := routes.AuthRoutesOpts{
+		AuthService: authService,
+		UserService: userService,
+	}
+	routes.SetupAuthRoutes(e, opts)
+
+	routes.SetupUsersRoutes(e, userService)
+
+	startServer(e, cfg)
+}
+
+func configureMiddleware(e *echo.Echo) {
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(mymiddleware.CORS())
+	e.Use(middleware.RequestID())
+}
+
+func startServer(e *echo.Echo, cfg *config.Config) {
+	log.Println("Starting server")
 
 	go func() {
 		addr := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
