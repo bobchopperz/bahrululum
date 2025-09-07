@@ -35,7 +35,7 @@ func JWTAuth(authService service.AuthService) echo.MiddlewareFunc {
 			c.Set("user_id", claims.UserID)
 			c.Set("user_claims", claims)
 
-			return nil
+			return next(c)
 		}
 	}
 }

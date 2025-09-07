@@ -36,6 +36,7 @@ func (s *userService) CreateUser(ctx context.Context, req *models.CreateUserRequ
 		Name:     req.Name,
 		Email:    req.Email,
 		Nip:      req.Nip,
+		Role:     req.Role,
 		Password: string(hashPassword),
 		IsActive: true,
 	}

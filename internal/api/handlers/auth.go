@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bobchopperz/bahrululum/internal/api/validators"
+	"github.com/bobchopperz/bahrululum/internal/constants"
 	"github.com/bobchopperz/bahrululum/internal/domain/models"
 	"github.com/bobchopperz/bahrululum/internal/domain/service"
 	"github.com/bobchopperz/bahrululum/internal/util"
@@ -28,6 +29,8 @@ func (h *AuthHandler) Register(c echo.Context) error {
 	if err := c.Bind(&req); err != nil {
 		return util.ErrorResponse(c, http.StatusBadRequest, "Invalid request body")
 	}
+
+	req.Role = constants.RoleUser.String()
 
 	if err := c.Validate(&req); err != nil {
 		return validators.ValidationErrorResponse(c, err)
