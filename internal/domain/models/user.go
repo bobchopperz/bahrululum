@@ -4,15 +4,14 @@ import (
 	"time"
 
 	"github.com/bobchopperz/bahrululum/internal/constants"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	ID        uuid.UUID      `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	ID        uint           `json:"id" gorm:"primaryKey;autoIncrement"`
 	Name      string         `json:"name" gorm:"not null; size:255" validate:"required,min=2,max=100"`
 	Email     string         `json:"email" gorm:"uniqueIndex;not null;size:255" validate:"required,email"`
-	Nip       string         `json:"nip" gorm:"not null; size:255" validate:"required,min=2,max=100"`
+	Nip       string         `json:"nip" gorm:"uniqueIndex;not null;size:12" validate:"required,min=12,max=12"`
 	Password  string         `json:"-" gorm:"not null;size:255"`
 	IsActive  bool           `json:"is_active" gorm:"default:true"`
 	Role      string         `json:"role" gorm:"not null;size:50;default:'user'" validate:"required"`
@@ -35,7 +34,7 @@ type LoginRequest struct {
 }
 
 type UserResponse struct {
-	ID        uuid.UUID `json:"id"`
+	ID        uint `json:"id"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	IsActive  bool      `json:"is_active"`

@@ -6,7 +6,6 @@ import (
 
 	"github.com/bobchopperz/bahrululum/internal/domain/service"
 	"github.com/bobchopperz/bahrululum/internal/util"
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -48,12 +47,12 @@ func (h *UserHandler) GetUsers(c echo.Context) error {
 func (h *UserHandler) GetUser(c echo.Context) error {
 	idstr := c.Param("id")
 
-	userID, err := uuid.Parse(idstr)
+	userID, err := strconv.ParseUint(idstr, 10, 32)
 	if err != nil {
-		return util.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve user")
+		return util.ErrorResponse(c, http.StatusBadRequest, "Invalid user ID")
 	}
 
-	user, err := h.userService.GetUser(c.Request().Context(), userID)
+	user, err := h.userService.GetUser(c.Request().Context(), uint(userID))
 	if err != nil {
 		return util.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve user")
 	}

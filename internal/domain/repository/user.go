@@ -5,17 +5,16 @@ import (
 	"errors"
 
 	"github.com/bobchopperz/bahrululum/internal/domain/models"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
 	Create(ctx context.Context, user *models.User) error
-	GetByID(ctx context.Context, id uuid.UUID) (*models.User, error)
+	GetByID(ctx context.Context, id uint) (*models.User, error)
 	GetByEmail(ctx context.Context, email string) (*models.User, error)
 	GetByNip(ctx context.Context, nip string) (*models.User, error)
 	Update(ctx context.Context, user *models.User) error
-	Delete(ctx context.Context, id uuid.UUID) error
+	Delete(ctx context.Context, id uint) error
 	List(ctx context.Context, offset, limit int) ([]*models.User, error)
 }
 
@@ -41,7 +40,7 @@ func (r *userRepository) Update(ctx context.Context, user *models.User) error {
 	return nil
 }
 
-func (r *userRepository) Delete(ctx context.Context, id uuid.UUID) error {
+func (r *userRepository) Delete(ctx context.Context, id uint) error {
 	if err := r.db.WithContext(ctx).Delete(&models.User{}, "id = ?", id).Error; err != nil {
 		return err
 	}
@@ -54,7 +53,7 @@ func (r *userRepository) List(ctx context.Context, offset, limit int) ([]*models
 	return users, err
 }
 
-func (r *userRepository) GetByID(ctx context.Context, id uuid.UUID) (*models.User, error) {
+func (r *userRepository) GetByID(ctx context.Context, id uint) (*models.User, error) {
 	var user models.User
 	err := r.db.WithContext(ctx).First(&user, "id = ?", id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {

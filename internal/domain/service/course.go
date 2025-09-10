@@ -5,15 +5,14 @@ import (
 
 	"github.com/bobchopperz/bahrululum/internal/domain/models"
 	"github.com/bobchopperz/bahrululum/internal/domain/repository"
-	"github.com/google/uuid"
 )
 
 type CourseService interface {
 	CreateCourse(ctx context.Context, req *models.CreateCourseRequest) (*models.CourseResponse, error)
-	GetCourse(ctx context.Context, id uuid.UUID) (*models.CourseResponse, error)
+	GetCourse(ctx context.Context, id uint) (*models.CourseResponse, error)
 	GetCourses(ctx context.Context, offset, limit int) ([]*models.CourseResponse, error)
-	UpdateCourse(ctx context.Context, id uuid.UUID, updates map[string]interface{}) (*models.CourseResponse, error)
-	DeleteCourse(ctx context.Context, id uuid.UUID) error
+	UpdateCourse(ctx context.Context, id uint, updates map[string]interface{}) (*models.CourseResponse, error)
+	DeleteCourse(ctx context.Context, id uint) error
 }
 
 type courseService struct {
@@ -37,7 +36,7 @@ func (s *courseService) CreateCourse(ctx context.Context, req *models.CreateCour
 	return course.ToResponse(), nil
 }
 
-func (s *courseService) GetCourse(ctx context.Context, id uuid.UUID) (*models.CourseResponse, error) {
+func (s *courseService) GetCourse(ctx context.Context, id uint) (*models.CourseResponse, error) {
 	course, err := s.repo.GetByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -60,7 +59,7 @@ func (s *courseService) GetCourses(ctx context.Context, offset, limit int) ([]*m
 	return responses, nil
 }
 
-func (s *courseService) UpdateCourse(ctx context.Context, id uuid.UUID, updates map[string]interface{}) (*models.CourseResponse, error) {
+func (s *courseService) UpdateCourse(ctx context.Context, id uint, updates map[string]interface{}) (*models.CourseResponse, error) {
 	course, err := s.repo.GetByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -77,7 +76,7 @@ func (s *courseService) UpdateCourse(ctx context.Context, id uuid.UUID, updates 
 	return course.ToResponse(), nil
 }
 
-func (s *courseService) DeleteCourse(ctx context.Context, id uuid.UUID) error {
+func (s *courseService) DeleteCourse(ctx context.Context, id uint) error {
 	if err := s.repo.Delete(ctx, id); err != nil {
 		return err
 	}

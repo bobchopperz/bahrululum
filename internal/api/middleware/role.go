@@ -6,7 +6,6 @@ import (
 	"github.com/bobchopperz/bahrululum/internal/constants"
 	"github.com/bobchopperz/bahrululum/internal/domain/service"
 	"github.com/bobchopperz/bahrululum/internal/util"
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,7 +17,7 @@ func RequireRole(userService service.UserService, requiredRoles ...constants.Rol
 				return util.ErrorResponse(c, http.StatusUnauthorized, "User not authenticated")
 			}
 
-			userID, ok := userIDStr.(uuid.UUID)
+			userID, ok := userIDStr.(uint)
 			if !ok {
 				return util.ErrorResponse(c, http.StatusUnauthorized, "Invalid user ID")
 			}

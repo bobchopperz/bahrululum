@@ -6,16 +6,15 @@ import (
 
 	"github.com/bobchopperz/bahrululum/internal/domain/models"
 	"github.com/bobchopperz/bahrululum/internal/domain/repository"
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService interface {
 	CreateUser(ctx context.Context, req *models.CreateUserRequest) (*models.UserResponse, error)
-	GetUser(ctx context.Context, id uuid.UUID) (*models.UserResponse, error)
+	GetUser(ctx context.Context, id uint) (*models.UserResponse, error)
 	GetUsers(ctx context.Context, offset, limit int) ([]*models.UserResponse, error)
-	UpdateUser(ctx context.Context, id uuid.UUID, updates map[string]interface{}) (*models.UserResponse, error)
-	DeleteUser(ctx context.Context, id uuid.UUID) error
+	UpdateUser(ctx context.Context, id uint, updates map[string]interface{}) (*models.UserResponse, error)
+	DeleteUser(ctx context.Context, id uint) error
 }
 
 type userService struct {
@@ -48,7 +47,7 @@ func (s *userService) CreateUser(ctx context.Context, req *models.CreateUserRequ
 	return user.ToResponse(), nil
 }
 
-func (s *userService) GetUser(ctx context.Context, id uuid.UUID) (*models.UserResponse, error) {
+func (s *userService) GetUser(ctx context.Context, id uint) (*models.UserResponse, error) {
 	user, err := s.repo.GetByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -71,7 +70,7 @@ func (s *userService) GetUsers(ctx context.Context, offset, limit int) ([]*model
 	return responses, nil
 }
 
-func (s *userService) UpdateUser(ctx context.Context, id uuid.UUID, updates map[string]interface{}) (*models.UserResponse, error) {
+func (s *userService) UpdateUser(ctx context.Context, id uint, updates map[string]interface{}) (*models.UserResponse, error) {
 	user, err := s.repo.GetByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -88,7 +87,7 @@ func (s *userService) UpdateUser(ctx context.Context, id uuid.UUID, updates map[
 	return user.ToResponse(), nil
 }
 
-func (s *userService) DeleteUser(ctx context.Context, id uuid.UUID) error {
+func (s *userService) DeleteUser(ctx context.Context, id uint) error {
 	if err := s.repo.Delete(ctx, id); err != nil {
 		return err
 	}

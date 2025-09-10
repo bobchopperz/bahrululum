@@ -8,7 +8,6 @@ import (
 	"github.com/bobchopperz/bahrululum/internal/domain/models"
 	"github.com/bobchopperz/bahrululum/internal/domain/service"
 	"github.com/bobchopperz/bahrululum/internal/util"
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -50,12 +49,12 @@ func (h *CourseHandler) GetCourses(c echo.Context) error {
 func (h *CourseHandler) GetCourse(c echo.Context) error {
 	idstr := c.Param("id")
 
-	courseID, err := uuid.Parse(idstr)
+	courseID, err := strconv.ParseUint(idstr, 10, 32)
 	if err != nil {
-		return util.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve course")
+		return util.ErrorResponse(c, http.StatusBadRequest, "Invalid course ID")
 	}
 
-	course, err := h.courseService.GetCourse(c.Request().Context(), courseID)
+	course, err := h.courseService.GetCourse(c.Request().Context(), uint(courseID))
 	if err != nil {
 		return util.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve course")
 	}

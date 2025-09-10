@@ -5,15 +5,14 @@ import (
 	"errors"
 
 	"github.com/bobchopperz/bahrululum/internal/domain/models"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type CourseRepository interface {
 	Create(ctx context.Context, course *models.Course) error
-	GetByID(ctx context.Context, id uuid.UUID) (*models.Course, error)
+	GetByID(ctx context.Context, id uint) (*models.Course, error)
 	Update(ctx context.Context, course *models.Course) error
-	Delete(ctx context.Context, id uuid.UUID) error
+	Delete(ctx context.Context, id uint) error
 	List(ctx context.Context, offset, limit int) ([]*models.Course, error)
 }
 
@@ -39,7 +38,7 @@ func (r *courseRepository) Update(ctx context.Context, course *models.Course) er
 	return nil
 }
 
-func (r *courseRepository) Delete(ctx context.Context, id uuid.UUID) error {
+func (r *courseRepository) Delete(ctx context.Context, id uint) error {
 	if err := r.db.WithContext(ctx).Delete(&models.Course{}, "id = ?", id).Error; err != nil {
 		return err
 	}
@@ -52,7 +51,7 @@ func (r *courseRepository) List(ctx context.Context, offset, limit int) ([]*mode
 	return courses, err
 }
 
-func (r *courseRepository) GetByID(ctx context.Context, id uuid.UUID) (*models.Course, error) {
+func (r *courseRepository) GetByID(ctx context.Context, id uint) (*models.Course, error) {
 	var course models.Course
 	err := r.db.WithContext(ctx).First(&course, "id = ?", id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {

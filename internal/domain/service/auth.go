@@ -10,18 +10,17 @@ import (
 	"github.com/bobchopperz/bahrululum/internal/domain/models"
 	"github.com/bobchopperz/bahrululum/internal/domain/repository"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthService interface {
 	Login(ctx context.Context, req *models.LoginRequest) (*models.TokenResponse, error)
 	ValidateToken(tokenString string) (*Claims, error)
-	GenerateToken(userID uuid.UUID) (*models.TokenResponse, error)
+	GenerateToken(userID uint) (*models.TokenResponse, error)
 }
 
 type Claims struct {
-	UserID uuid.UUID `json:"user_id"`
+	UserID uint `json:"user_id"`
 	jwt.RegisteredClaims
 }
 
@@ -77,7 +76,7 @@ func (s *authService) ValidateToken(tokenString string) (*Claims, error) {
 	return nil, errors.New("invalid token claims")
 }
 
-func (s *authService) GenerateToken(userID uuid.UUID) (*models.TokenResponse, error) {
+func (s *authService) GenerateToken(userID uint) (*models.TokenResponse, error) {
 	accessClaimns := &Claims{
 		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
