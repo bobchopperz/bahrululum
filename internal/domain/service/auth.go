@@ -55,6 +55,8 @@ func (s *authService) Login(ctx context.Context, req *models.LoginRequest) (*mod
 		return nil, fmt.Errorf("failed to generate token")
 	}
 
+	token.User = user.ToResponse()
+
 	return token, nil
 }
 

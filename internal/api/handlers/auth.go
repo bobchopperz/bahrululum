@@ -41,7 +41,15 @@ func (h *AuthHandler) Register(c echo.Context) error {
 		return err
 	}
 
-	return util.SuccessResponse(c, http.StatusCreated, "User created successfully", user)
+	// Generate tokens for the new user
+	tokens, err := h.authService.GenerateToken(user.ID)
+	if err != nil {
+		return util.ErrorResponse(c, http.StatusInternalServerError, "Failed to generate token")
+	}
+
+	tokens.User = user
+
+	return util.SuccessResponse(c, http.StatusCreated, "User registered successfully", tokens)
 }
 
 func (h *AuthHandler) Login(c echo.Context) error {

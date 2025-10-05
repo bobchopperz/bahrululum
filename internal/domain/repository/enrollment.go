@@ -12,6 +12,8 @@ type EnrollmentRepository interface {
 	Create(ctx context.Context, course *models.Enrollment) error
 	GetByID(ctx context.Context, id uint) (*models.Enrollment, error)
 	GetByCourseID(ctx context.Context, id uint) (*models.Enrollment, error)
+	GetByUserAndCourse(ctx context.Context, userID, courseID uint) (*models.Enrollment, error)
+	GetByUserID(ctx context.Context, userID uint) ([]*models.Enrollment, error)
 	Update(ctx context.Context, course *models.Enrollment) error
 	Delete(ctx context.Context, id uint) error
 	List(ctx context.Context, offset, limit int) ([]*models.Enrollment, error)
@@ -68,4 +70,19 @@ func (r *enrollmentRepository) GetByCourseID(ctx context.Context, id uint) (*mod
 		return nil, err
 	}
 	return &enrollment, err
+}
+
+func (r *enrollmentRepository) GetByUserAndCourse(ctx context.Context, userID, courseID uint) (*models.Enrollment, error) {
+	var enrollment models.Enrollment
+	err := r.db.WithContext(ctx).First(&enrollment, "user_id = ? AND course_id = ?", userID, courseID).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+	return &enrollment, err
+}
+
+func (r *enrollmentRepository) GetByUserID(ctx context.Context, userID uint) ([]*models.Enrollment, error) {
+	var enrollments []*models.Enrollment
+	err := r.db.WithContext(ctx).Where("user_id = ?", userID).Find(&enrollments).Error
+	return enrollments, err
 }
