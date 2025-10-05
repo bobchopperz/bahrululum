@@ -6,5 +6,5 @@ import (
 )
 
 func SetupHealthRoutes(e *echo.Echo) {
-	e.GET("/health", handlers.HealthCheck)
+	e.GET("/api/health", handlers.HealthCheck)
 }

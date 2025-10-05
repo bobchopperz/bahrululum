@@ -9,7 +9,7 @@ import (
 func SetupCoursesRoutes(e *echo.Echo, courseService service.CourseService) {
 	courseHandler := handlers.NewCourseHandler(courseService)
 
-	courses := e.Group("/courses")
+	courses := e.Group("/api/courses")
 	courses.GET("", courseHandler.GetCourses)
 	courses.GET("/:id", courseHandler.GetCourse)
 	courses.POST("", courseHandler.CreateCourse)

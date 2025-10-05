@@ -14,6 +14,6 @@ type AuthRoutesOpts struct {
 func SetupAuthRoutes(e *echo.Echo, opts AuthRoutesOpts) {
 	authHandler := handlers.NewAuthHandler(opts.AuthService, opts.UserService)
 
-	e.POST("/login", authHandler.Login)
-	e.POST("/register", authHandler.Register)
+	e.POST("/api/login", authHandler.Login)
+	e.POST("/api/register", authHandler.Register)
 }

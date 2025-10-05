@@ -9,7 +9,7 @@ import (
 func SetupUsersRoutes(e *echo.Echo, userService service.UserService) {
 	userHandler := handlers.NewUserHandler(userService)
 
-	users := e.Group("/users")
+	users := e.Group("/api/users")
 	users.GET("", userHandler.GetUsers)
 	users.GET("/:id", userHandler.GetUser)
 }
