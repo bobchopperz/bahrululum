@@ -20,6 +20,8 @@ func NewEnrollmentHandler(s service.EnrollmentService) *EnrollmentHandler {
 }
 
 func (h *EnrollmentHandler) Create(c echo.Context) error {
+	userID := c.Get("user_id").(uint)
+
 	var req models.CreateEnrollmentRequest
 
 	if err := c.Bind(&req); err != nil {
@@ -30,12 +32,12 @@ func (h *EnrollmentHandler) Create(c echo.Context) error {
 		return validators.ValidationErrorResponse(c, err)
 	}
 
-	entity, err := h.enrollmentService.Create(c.Request().Context(), &req)
+	entity, err := h.enrollmentService.Create(c.Request().Context(), userID, &req)
 	if err != nil {
 		return util.ErrorResponse(c, http.StatusUnprocessableEntity, "Something went wrong")
 	}
 
-	return util.SuccessResponse(c, http.StatusCreated, "Enrollment retrieved successfully", entity)
+	return util.SuccessResponse(c, http.StatusCreated, "Enrollment created successfully", entity)
 }
 
 func (h *EnrollmentHandler) GetEnrollment(c echo.Context) error {

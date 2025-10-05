@@ -13,7 +13,6 @@ type Enrollment struct {
 }
 
 type CreateEnrollmentRequest struct {
-	UserID   uint `json:"user_id" validate:"required"`
 	CourseID uint `json:"course_id" validate:"required"`
 }
 

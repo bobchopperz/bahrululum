@@ -54,7 +54,7 @@ func main() {
 	routes.SetupAuthRoutes(e, opts)
 	routes.SetupUsersRoutes(e, userService)
 	routes.SetupCoursesRoutes(e, courseService)
-	routes.SetupEnrollmentRoutes(e, enrollmentService)
+	routes.SetupEnrollmentRoutes(e, enrollmentService, authService)
 
 	startServer(e, cfg)
 }
