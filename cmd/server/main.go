@@ -39,11 +39,15 @@ func main() {
 	userRepository := repository.NewUserRepository(db)
 	courseRepository := repository.NewCourseRepository(db)
 	enrollmentRepository := repository.NewEnrollmentRepository(db)
+	chapterRepository := repository.NewCourseChapterRepository(db)
+	contentRepository := repository.NewCourseContentRepository(db)
 
 	userService := service.NewUserService(userRepository)
 	authService := service.NewAuthService(userRepository, &cfg.JWTConfig)
 	courseService := service.NewCourseService(courseRepository)
 	enrollmentService := service.NewEnrollmentService(enrollmentRepository)
+	chapterService := service.NewCourseChapterService(chapterRepository)
+	contentService := service.NewCourseContentService(contentRepository)
 
 	routes.SetupHealthRoutes(e)
 
@@ -55,6 +59,8 @@ func main() {
 	routes.SetupUsersRoutes(e, userService)
 	routes.SetupCoursesRoutes(e, courseService)
 	routes.SetupEnrollmentRoutes(e, enrollmentService, authService)
+	routes.SetupCourseChapterRoutes(e, chapterService)
+	routes.SetupCourseContentRoutes(e, contentService)
 
 	startServer(e, cfg)
 }
