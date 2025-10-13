@@ -55,3 +55,16 @@ func (h *EnrollmentHandler) GetEnrollment(c echo.Context) error {
 
 	return util.SuccessResponse(c, http.StatusOK, "Course retrieved successfully", entity)
 }
+
+func (h *EnrollmentHandler) GetMyEnrollments(c echo.Context) error {
+	userID := c.Get("user_id").(uint)
+
+	courseIDs, err := h.enrollmentService.GetUserEnrollments(c.Request().Context(), userID)
+	if err != nil {
+		return util.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve enrollments")
+	}
+
+	return util.SuccessResponse(c, http.StatusOK, "Enrollments retrieved successfully", map[string]interface{}{
+		"course_ids": courseIDs,
+	})
+}

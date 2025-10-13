@@ -13,6 +13,7 @@ func SetupEnrollmentRoutes(e *echo.Echo, enrollmentService service.EnrollmentSer
 	enrollments := e.Group("/api/enrollments")
 	enrollments.Use(middleware.JWTAuth(authService))
 
+	enrollments.GET("/my", h.GetMyEnrollments)
 	enrollments.GET("/:course_id", h.GetEnrollment)
 	enrollments.POST("", h.Create)
 }
