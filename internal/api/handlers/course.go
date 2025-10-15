@@ -78,5 +78,49 @@ func (h *CourseHandler) CreateCourse(c echo.Context) error {
 		return util.ErrorResponse(c, http.StatusUnprocessableEntity, "Something went wrong")
 	}
 
-	return util.SuccessResponse(c, http.StatusCreated, "Course retrieved successfully", course)
+	return util.SuccessResponse(c, http.StatusCreated, "Course created successfully", course)
+}
+
+func (h *CourseHandler) UpdateCourse(c echo.Context) error {
+	idStr := c.Param("id")
+	courseID, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		return util.ErrorResponse(c, http.StatusBadRequest, "Invalid course ID")
+	}
+
+	var req models.CreateCourseRequest
+	if err := c.Bind(&req); err != nil {
+		return util.ErrorResponse(c, http.StatusBadRequest, "Invalid request")
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return validators.ValidationErrorResponse(c, err)
+	}
+
+	updates := map[string]interface{}{
+		"name":        req.Name,
+		"description": req.Description,
+	}
+
+	course, err := h.courseService.UpdateCourse(c.Request().Context(), uint(courseID), updates)
+	if err != nil {
+		return util.ErrorResponse(c, http.StatusUnprocessableEntity, "Failed to update course")
+	}
+
+	return util.SuccessResponse(c, http.StatusOK, "Course updated successfully", course)
+}
+
+func (h *CourseHandler) DeleteCourse(c echo.Context) error {
+	idStr := c.Param("id")
+	courseID, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		return util.ErrorResponse(c, http.StatusBadRequest, "Invalid course ID")
+	}
+
+	err = h.courseService.DeleteCourse(c.Request().Context(), uint(courseID))
+	if err != nil {
+		return util.ErrorResponse(c, http.StatusUnprocessableEntity, "Failed to delete course")
+	}
+
+	return util.SuccessResponse(c, http.StatusOK, "Course deleted successfully", nil)
 }

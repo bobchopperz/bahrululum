@@ -13,4 +13,6 @@ func SetupCoursesRoutes(e *echo.Echo, courseService service.CourseService) {
 	courses.GET("", courseHandler.GetCourses)
 	courses.GET("/:id", courseHandler.GetCourse)
 	courses.POST("", courseHandler.CreateCourse)
+	courses.PUT("/:id", courseHandler.UpdateCourse)
+	courses.DELETE("/:id", courseHandler.DeleteCourse)
 }

@@ -69,6 +69,10 @@ func (s *courseService) UpdateCourse(ctx context.Context, id uint, updates map[s
 		course.Name = name.(string)
 	}
 
+	if description, ok := updates["description"]; ok {
+		course.Description = description.(string)
+	}
+
 	if err := s.repo.Update(ctx, course); err != nil {
 		return nil, err
 	}

@@ -2,9 +2,11 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/bobchopperz/bahrululum/internal/domain/models"
 	"github.com/bobchopperz/bahrululum/internal/domain/repository"
+	"gorm.io/gorm"
 )
 
 type EnrollmentService interface {
@@ -24,7 +26,7 @@ func NewEnrollmentService(repo repository.EnrollmentRepository) EnrollmentServic
 
 func (s *enrollmentService) Create(ctx context.Context, userID uint, req *models.CreateEnrollmentRequest) (*models.EnrollmentResponse, error) {
 	existing, err := s.repo.GetByUserAndCourse(ctx, userID, req.CourseID)
-	if err != nil {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
 
@@ -47,6 +49,9 @@ func (s *enrollmentService) Create(ctx context.Context, userID uint, req *models
 func (s *enrollmentService) CheckEnrollment(ctx context.Context, userID, courseID uint) (bool, error) {
 	enrollment, err := s.repo.GetByUserAndCourse(ctx, userID, courseID)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, nil
+		}
 		return false, err
 	}
 	return enrollment != nil, nil
