@@ -43,7 +43,8 @@ RUN echo '#!/bin/sh' > /root/entrypoint.sh && \
     echo 'done' >> /root/entrypoint.sh && \
     echo 'echo "Database is ready!"' >> /root/entrypoint.sh && \
     echo 'echo "Running migrations..."' >> /root/entrypoint.sh && \
-    echo './migrate up || echo "Migration failed, but continuing..."' >> /root/entrypoint.sh && \
+    echo 'ls -la /root/migrations || echo "Migrations directory not found"' >> /root/entrypoint.sh && \
+    echo './migrate -dir=/root/migrations -v up || echo "Migration failed, but continuing..."' >> /root/entrypoint.sh && \
     echo 'echo "Starting server..."' >> /root/entrypoint.sh && \
     echo 'exec ./server' >> /root/entrypoint.sh && \
     chmod +x /root/entrypoint.sh

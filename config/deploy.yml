@@ -1,4 +1,4 @@
-# Kamal deployment configuration for Bahrul Ulum HSI
+# Kamal deployment configuration for Bahrul Ulum HSI Backend
 
 service: bahrululum
 
@@ -35,11 +35,14 @@ env:
     - APP_JWT_SECRET
 
 # Proxy configuration (kamal-proxy replaces Traefik in Kamal 2.x)
+# IMPORTANT: SSL is NOT configured here - it inherits from frontend (root path)
+# Backend handles /api/* requests
 proxy:
-  ssl: true
   host: fungsikuadrat.my.id
   app_port: 8080
   forward_headers: true
+  path_prefix: /api
+  strip_path_prefix: false
   healthcheck:
     path: /api/health
     interval: 10
