@@ -38,7 +38,7 @@ COPY --from=builder /app/migrations ./migrations
 RUN echo '#!/bin/sh' > /root/entrypoint.sh && \
     echo 'set -e' >> /root/entrypoint.sh && \
     echo 'echo "Waiting for database..."' >> /root/entrypoint.sh && \
-    echo 'until pg_isready -h ${DB_HOST:-localhost} -p ${DB_PORT:-5432} -U ${DB_USER:-postgres}; do' >> /root/entrypoint.sh && \
+    echo 'until pg_isready -h ${APP_DATABASE_HOST:-localhost} -p ${APP_DATABASE_PORT:-5432} -U ${APP_DATABASE_USER:-postgres}; do' >> /root/entrypoint.sh && \
     echo '  sleep 2' >> /root/entrypoint.sh && \
     echo 'done' >> /root/entrypoint.sh && \
     echo 'echo "Database is ready!"' >> /root/entrypoint.sh && \
