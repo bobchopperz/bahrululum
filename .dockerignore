@@ -1,0 +1,55 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Build artifacts
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test files
+*_test.go
+testdata/
+
+# Documentation
+*.md
+!CLAUDE.md
+docs/
+
+# Kamal
+.kamal/
+config/deploy.yml
+
+# Config files (will use env vars in production)
+configs/config.yaml
+!configs/config.yaml.example
+
+# Development tools
+.air.toml
+air
+tmp/
+
+# API test files
+*.http
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,81 @@
+# Kamal deployment configuration for Bahrul Ulum HSI
+
+service: bahrululum
+
+image: brajes/bahrululum
+
+servers:
+  web:
+    hosts:
+      - 203.194.113.14
+
+# Use Docker Hub registry
+registry:
+  server: docker.io
+  username: brajes
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Environment variables for the application
+# The APP_ prefix is automatically used by Viper for configuration
+env:
+  clear:
+    APP_SERVER_PORT: 8080
+    APP_SERVER_HOST: 0.0.0.0
+    APP_SERVER_MODE: release
+    APP_DATABASE_HOST: bahrululum-db
+    APP_DATABASE_PORT: 5432
+    APP_DATABASE_NAME: bahrululum
+    APP_DATABASE_USER: postgres
+    APP_DATABASE_SSL_MODE: disable
+    APP_DATABASE_MAX_OPEN_CONNS: 25
+    APP_DATABASE_MAX_IDLE_CONNS: 5
+  secret:
+    - APP_DATABASE_PASSWORD
+    - APP_JWT_SECRET
+
+# Proxy configuration (kamal-proxy replaces Traefik in Kamal 2.x)
+proxy:
+  ssl: true
+  host: fungsikuadrat.my.id
+  app_port: 8080
+  forward_headers: true
+  healthcheck:
+    path: /api/health
+    interval: 10
+    timeout: 5
+
+# PostgreSQL database as an accessory
+accessories:
+  db:
+    image: postgres:16-alpine
+    host: 203.194.113.14
+    port: 5432
+    env:
+      clear:
+        POSTGRES_DB: bahrululum
+        POSTGRES_USER: postgres
+      secret:
+        - POSTGRES_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
+    options:
+      health-cmd: "pg_isready -U postgres"
+      health-interval: 10s
+      health-timeout: 5s
+      health-retries: 5
+
+# Health check is now configured under proxy section (see above)
+
+# Builder configuration
+builder:
+  context: .
+  arch: amd64
+
+# SSH configuration
+ssh:
+  user: root
+
+# Volume mounts
+volumes:
+  - ./migrations:/root/migrations
